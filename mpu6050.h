@@ -65,12 +65,32 @@ typedef enum {
 	MPU6050_GYRORANGE_2000 = 3
 }MPU6050_GyroRangeTypeDef;
 
+/* The MPU6050 has an integrated Digital Low Pass Filter.
+ * The numbers here are very approximate filter frequencies because
+ * they differ slightly between the accelerometer and gyro components.
+ * Additionally, different filters involve different delays (up to 20ms
+ * for very low frequencies). The exact values can be found in the register
+ * map.
+ */
+typedef enum {
+	MPU6050_FILTER_260 = 0,
+	MPU6050_FILTER_180 = 1,
+	MPU6050_FILTER_90 = 2,
+	MPU6050_FILTER_40 = 3,
+	MPU6050_FILTER_20 = 4,
+	MPU6050_FILTER_10 = 5,
+	MPU6050_FILTER_5 = 6
+}MPU6050_FilterCutoffTypeDef;
+
 extern MPU6050_StatusTypeDef MPU6050_Init(I2C_HandleTypeDef* hi2c,
 		MPU6050_AddrTypeDef targetAddr);
 extern MPU6050_StatusTypeDef MPU6050_SetAccelRange(I2C_HandleTypeDef* hi2c,
 		MPU6050_AddrTypeDef targetAddr, MPU6050_AccelRangeTypeDef range);
 extern MPU6050_StatusTypeDef MPU6050_SetGyroRange(I2C_HandleTypeDef* hi2c,
 		MPU6050_AddrTypeDef targetAddr, MPU6050_GyroRangeTypeDef range);
+// WARNING: This function fully overwrites register 25 and sets EXT_SYNC_SET to 0.
+extern MPU6050_StatusTypeDef MPU6050_SetFilter(I2C_HandleTypeDef* hi2c,
+		MPU6050_AddrTypeDef targetAddr, MPU6050_FilterCutoffTypeDef filter);
 
 extern int16_t MPU6050_GetAccelXRegister(I2C_HandleTypeDef* hi2c,
 		MPU6050_AddrTypeDef targetAddr, MPU6050_StatusTypeDef* hStatus);

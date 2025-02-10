@@ -43,6 +43,21 @@ MPU6050_StatusTypeDef MPU6050_SetGyroRange(I2C_HandleTypeDef* hi2c,
 	}
 }
 
+MPU6050_StatusTypeDef MPU6050_SetFilter(I2C_HandleTypeDef* hi2c,
+		MPU6050_AddrTypeDef targetAddr, MPU6050_FilterCutoffTypeDef filter){
+	HAL_StatusTypeDef i2cStatus;
+
+	uint8_t filterBurst[] = {26, filter};
+
+	i2cStatus = HAL_I2C_Master_Transmit(hi2c, targetAddr, filterBurst, 2, 150);
+
+	if(i2cStatus != HAL_OK){
+		return MPU6050_STATUS_I2C_FAIL;
+	} else {
+		return MPU6050_STATUS_OK;
+	}
+}
+
 
 int16_t MPU6050_GetAccelXRegister(I2C_HandleTypeDef* hi2c, MPU6050_AddrTypeDef targetAddr,
 		MPU6050_StatusTypeDef* hStatus){
